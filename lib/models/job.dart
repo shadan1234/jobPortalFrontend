@@ -1,28 +1,38 @@
-import 'package:flutter/material.dart';
-
 class Job {
-  final String title;
-  final String address;
-  final String companyLogo;
-  final String timeAgo;
-  final String type;
-  final String experienceLevel;
-  final String experienceLevelColor;
-  
-  bool isMyFav;
+  String? id;
+  String compName;
+  String jobTitle;
+  String jobDescription;
+  String jobLocation;
+  String empId;
 
-  Job(this.title, this.address, this.timeAgo, this.companyLogo, this.type, this.experienceLevel, this.experienceLevelColor, this.isMyFav);
+  Job({
+    this.id,
+    required this.compName,
+    required this.jobTitle,
+    required this.jobDescription,
+    required this.jobLocation,
+    required this.empId,
+  });
 
   factory Job.fromJson(Map<String, dynamic> json) {
-    return new Job(
-      json['title'], 
-      json['address'], 
-      json['timeAgo'], 
-      json['companyLogo'], 
-      json['type'],
-      json['experienceLevel'],
-      json['experienceLevelColor'],
-      json['isMyFav']
+    return Job(
+      id: json['_id'],
+      compName: json['compName'],
+      jobTitle: json['jobTitle'],
+      jobDescription: json['jobDescription'],
+      jobLocation: json['jobLocation'],
+      empId: json['empId'],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'compName': compName,
+      'jobTitle': jobTitle,
+      'jobDescription': jobDescription,
+      'jobLocation': jobLocation,
+      'empId': empId,
+    };
   }
 }

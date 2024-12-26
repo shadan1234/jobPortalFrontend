@@ -1,7 +1,8 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 
-class SignupPage extends StatelessWidget {
+class RegisterPage extends StatelessWidget {
+   static const String routeName = '/register';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
