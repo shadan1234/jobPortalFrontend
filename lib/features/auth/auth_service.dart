@@ -21,7 +21,7 @@ class AuthService {
         id: '',
         name: name,
         email: email,
-        password: password,
+        password: password, applicationList: [], roles: [], token: '',
       );
 
       http.Response res = await http.post(
