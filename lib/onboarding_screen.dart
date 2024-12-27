@@ -46,14 +46,14 @@ class OnboardingScreen extends StatelessWidget {
                   FadeInUp(duration: Duration(milliseconds: 1500), child: MaterialButton(
                     minWidth: double.infinity,
                     height: 60,
-                    onPressed: () async {
-                     http.Response res = await http.get(Uri.parse('$uri/health-check'),
+                    onPressed: (){
+          //            http.Response res = await http.get(Uri.parse('$uri/health-check'),
           
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8'
-          });
-              print(res);
-               print(res.body);
+          // headers: <String, String>{
+          //   'Content-Type': 'application/json; charset=UTF-8'
+          // });
+          //     print(res);
+          //      print(res.body);
                       Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
                     },
                     shape: RoundedRectangleBorder(

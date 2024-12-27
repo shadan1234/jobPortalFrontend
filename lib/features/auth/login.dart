@@ -1,8 +1,18 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:job_portal_frontend/features/auth/auth_service.dart';
 
 class LoginPage extends StatelessWidget {
    static const String routeName = '/login';
+      final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+   void login(BuildContext context){
+        final email = emailController.text.trim();
+    final password = passwordController.text.trim();
+    AuthService().signInUser(context: context, email: email, password: password);
+   
+   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,8 +55,8 @@ class LoginPage extends StatelessWidget {
                     padding: EdgeInsets.symmetric(horizontal: 40),
                     child: Column(
                       children: <Widget>[
-                        FadeInUp(duration: Duration(milliseconds: 1200), child: makeInput(label: "Email")),
-                        FadeInUp(duration: Duration(milliseconds: 1300), child: makeInput(label: "Password", obscureText: true)),
+                        FadeInUp(duration: Duration(milliseconds: 1200), child: makeInput(label: "Email", controller: emailController )),
+                        FadeInUp(duration: Duration(milliseconds: 1300), child: makeInput(label: "Password", obscureText: true, controller: passwordController)),
                       ],
                     ),
                   ),
@@ -66,7 +76,9 @@ class LoginPage extends StatelessWidget {
                       child: MaterialButton(
                         minWidth: double.infinity,
                         height: 60,
-                        onPressed: () {},
+                        onPressed: () {
+                          login(context);
+                        },
                         color: Colors.greenAccent,
                         elevation: 0,
                         shape: RoundedRectangleBorder(
@@ -106,7 +118,7 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  Widget makeInput({label, obscureText = false}) {
+  Widget makeInput({label, obscureText = false, controller}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -117,6 +129,7 @@ class LoginPage extends StatelessWidget {
         ),),
         SizedBox(height: 5,),
         TextField(
+          controller: controller,
           obscureText: obscureText,
           decoration: InputDecoration(
             contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),

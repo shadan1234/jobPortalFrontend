@@ -57,9 +57,10 @@ class _MyAppState extends State<MyApp> {
   Widget _getHomeScreen() {
     return Consumer<UserProvider>(
       builder: (context, userProvider, _) {
-       List<String>roles= userProvider.user.roles![1] ;
-        if (userProvider.user.token.isNotEmpty) {
-          if (roles[1] == 'USER') {
+       
+        if (userProvider.user.token.isNotEmpty && userProvider.user.roles!=null) {
+          List<String>?roles= userProvider.user.roles ;
+          if (roles![0] == 'USER') {
             return  HomeScreen();
           } 
           else  {

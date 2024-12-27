@@ -34,7 +34,7 @@ class User {
       'email': email,
       'password': password,
       'applicationList': applicationList?.map((x) => x?.toMap()).toList(),
-      'roles': roles,
+      'roles': roles as List ,
       'token': token,
     };
   }

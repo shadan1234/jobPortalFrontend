@@ -17,19 +17,17 @@ class AuthService {
     required String name,
   }) async {
     try {
-      User user = User(
-        id: '',
-        name: name,
-        email: email,
-        password: password, applicationList: [], roles: [], token: '',
-      );
-
+     Map<String, dynamic> body = {
+  'name': name,
+  'email': email,
+  'password': password,
+};
       http.Response res = await http.post(
         Uri.parse('$uri/register'),
-        body: user.toJson(),
+        body: jsonEncode(body),
         headers: {'Content-Type': 'application/json; charset=UTF-8'},
       );
-
+      print(res.body);
       httpErrorHandle(
         response: res,
         context: context,
