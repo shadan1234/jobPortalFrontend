@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:job_portal_frontend/features/auth/login.dart';
 import 'package:job_portal_frontend/features/auth/signup.dart';
-import 'package:job_portal_frontend/home_screen.dart';
+import 'package:job_portal_frontend/features/home-screen/home_screen.dart';
 
 
 Route<dynamic> generateRoute(RouteSettings routeSettings) {

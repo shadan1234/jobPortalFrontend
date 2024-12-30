@@ -9,10 +9,10 @@ class User {
   String? id;
   String name;
   String email;
-  String password;
+  String? password;
   List<Application>? applicationList;
   List<String>? roles;
-  String token;
+  
   
 
   User({
@@ -22,7 +22,7 @@ class User {
     required this.password,
     required this.applicationList,
     required this.roles,
-    required this.token,
+   
   });
 
 
@@ -33,27 +33,34 @@ class User {
       'name': name,
       'email': email,
       'password': password,
-      'applicationList': applicationList?.map((x) => x?.toMap()).toList(),
+      'applicationList': applicationList?.map((x) => x.toMap()).toList(),
       'roles': roles as List ,
-      'token': token,
+      
     };
   }
 
-  factory User.fromMap(Map<String, dynamic> map) {
-    return User(
-      id: map['id'] != null ? map['id'] as String : null,
-      name: map['name'] as String,
-      email: map['email'] as String,
-      password: map['password'] as String,
-      applicationList: map['applicationList'] != null ? List<Application>.from((map['applicationList'] as List<int>).map<Application?>((x) => Application.fromMap(x as Map<String,dynamic>),),) : null,
-      roles: map['roles'] != null ? List<String>.from((map['roles'] as List<String>)) : null,
-      token: map['token'] as String,
-    ); 
-  }
+factory User.fromMap(Map<String, dynamic> map) {
+   
+  return User(
+    id: map['id'] as String?,
+    name: map['name'] as String,
+    email: map['email'] as String,
+    password: map['password'] as String,
+    applicationList: map['applicationList'] != null 
+        ? List<Application>.from((map['applicationList'] as List).map((x) => Application.fromMap(x)))
+        : [],
+    roles: map['roles'] != null ? List<String>.from(map['roles']) : [],
+    
+  );
 
-  String toJson() => json.encode(toMap());
+}
 
-  factory User.fromJson(String source) => User.fromMap(json.decode(source) as Map<String, dynamic>);
+String toJson() => json.encode(toMap());
+
+factory User.fromJson(String source) {
+  return User.fromMap(json.decode(source) as Map<String, dynamic>);
+}
+
 
   User copyWith({
     String? id,
@@ -71,37 +78,13 @@ class User {
       password: password ?? this.password,
       applicationList: applicationList ?? this.applicationList,
       roles: roles ?? this.roles,
-      token: token ?? this.token,
+      
     );
   }
 
   @override
   String toString() {
-    return 'User(id: $id, name: $name, email: $email, password: $password, applicationList: $applicationList, roles: $roles, token: $token)';
+    return 'User(id: $id, name: $name, email: $email, password: $password, applicationList: $applicationList, roles: $roles)';
   }
 
-  @override
-  bool operator ==(covariant User other) {
-    if (identical(this, other)) return true;
-  
-    return 
-      other.id == id &&
-      other.name == name &&
-      other.email == email &&
-      other.password == password &&
-      listEquals(other.applicationList, applicationList) &&
-      listEquals(other.roles, roles) &&
-      other.token == token;
-  }
-
-  @override
-  int get hashCode {
-    return id.hashCode ^
-      name.hashCode ^
-      email.hashCode ^
-      password.hashCode ^
-      applicationList.hashCode ^
-      roles.hashCode ^
-      token.hashCode;
-  }
 }

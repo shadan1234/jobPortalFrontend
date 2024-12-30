@@ -1,22 +1,25 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:job_portal_frontend/globals.dart';
 
-void showSnackBar(BuildContext context, String text) {
-  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
+void showSnackBar(String message) {
+  scaffoldMessengerKey.currentState?.showSnackBar(
+    SnackBar(content: Text(message)),
+  );
 }
-void httpErrorHandle({required http.Response response,required BuildContext context,required VoidCallback onSuccess,}){
+void httpErrorHandle({required http.Response response,required VoidCallback onSuccess,}){
   switch(response.statusCode){
     case 200:
     onSuccess();
     break;
     case 400:
-    showSnackBar(context, jsonDecode(response.body)['msg']);
+    showSnackBar(jsonDecode(response.body));
     break;
     case 500:
-     showSnackBar(context, jsonDecode(response.body)['error']);
+     showSnackBar( jsonDecode(response.body));
      break;
      default:
-     showSnackBar(context, response.body);
+     showSnackBar( response.body);
   }
 }

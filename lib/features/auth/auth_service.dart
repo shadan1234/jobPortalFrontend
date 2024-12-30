@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:job_portal_frontend/commons/error_handling.dart';
 import 'package:job_portal_frontend/globals.dart';
-import 'package:job_portal_frontend/home_screen.dart';
+import 'package:job_portal_frontend/features/home-screen/home_screen.dart';
 import 'package:job_portal_frontend/models/user.dart';
 import 'package:job_portal_frontend/provider/user_provider.dart';
 import 'package:provider/provider.dart';
@@ -30,14 +30,14 @@ class AuthService {
       print(res.body);
       httpErrorHandle(
         response: res,
-        context: context,
+        
         onSuccess: () {
-          showSnackBar(context, "Account created! Please log in.");
+          showSnackBar( "Account created! Please log in.");
           Navigator.pushNamed(context, '/login');
         },
       );
     } catch (e) {
-      showSnackBar(context, e.toString());
+      showSnackBar( e.toString());
     }
   }
 
@@ -48,28 +48,41 @@ class AuthService {
     required String password,
   }) async {
     try {
+      print(email);
       http.Response res = await http.post(
         Uri.parse('$uri/login'),
         body: jsonEncode({'email': email, 'password': password}),
         headers: {'Content-Type': 'application/json; charset=UTF-8'},
       );
-
+ print(res.body);
+ print(res);
+ print(res.request);
       httpErrorHandle(
         response: res,
-        context: context,
+        
         onSuccess: () async {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          await prefs.setString('x-auth-token', jsonDecode(res.body)['token']);
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  // print(jsonDecode(res.body)['token']);
+  await prefs.setString('x-auth-token', jsonDecode(res.body)['token']);
+  final UserProvider userProvider=Provider.of<UserProvider>(context,listen:false);
+  // Properly decode the User object
+  final userJson = jsonDecode(res.body)['User'];
+  // print(userJson);
+  // print("bale");
+  // print("gale");
+  // print(userJson['id']);
+  userProvider.setUserFromMap(userJson); // Pass as a valid JSON string
+  
+  Navigator.pushNamedAndRemoveUntil(
+    context,
+    HomeScreen.routeName,
+    (route) => false,
+  );
+},
 
-          Navigator.pushNamedAndRemoveUntil(
-            context,
-            HomeScreen.routeName,
-            (route) => false,
-          );
-        },
       );
     } catch (e) {
-      showSnackBar(context, e.toString());
+      showSnackBar( e.toString());
     }
   }
 
@@ -78,28 +91,34 @@ class AuthService {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('x-auth-token');
-
+       print(token);
       if (token == null) {
         prefs.setString('x-auth-token', '');
+        print("bal");
+        return;
       }
 
-      var tokenRes = await http.post(
-        Uri.parse('$uri/tokenIsValid'),
-        headers: {'Content-Type': 'application/json; charset=UTF-8', 'x-auth-token': token!},
+      var tokenRes = await http.get(
+        Uri.parse('$uri/validate-token'),
+        headers: {'Content-Type': 'application/json; charset=UTF-8', 'Authorization': "Bearer $token"},
       );
+      print(tokenRes.body);
 
-      var isValidToken = jsonDecode(tokenRes.body);
+    if (tokenRes.statusCode == 200) {
+  var response = jsonDecode(tokenRes.body);
+  bool isValidToken = response['status'];
       if (isValidToken) {
         http.Response userRes = await http.get(
-          Uri.parse('$uri/'),
-          headers: {'Content-Type': 'application/json; charset=UTF-8', 'x-auth-token': token},
+          Uri.parse('$uri/get-data'),
+          headers: {'Content-Type': 'application/json; charset=UTF-8', 'Authorization': "Bearer $token"},
         );
-
-        UserProvider userProvider = Provider.of<UserProvider>(context, listen: false);
+        print(userRes.body);
+        UserProvider userProvider = Provider.of<UserProvider>(context,listen:false );
         userProvider.setUser(userRes.body);
       }
+    }
     } catch (e) {
-      showSnackBar(context, e.toString());
+      showSnackBar( e.toString());
     }
   }
 
@@ -110,7 +129,7 @@ class AuthService {
       await prefs.setString('x-auth-token', '');
       Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
     } catch (e) {
-      showSnackBar(context, e.toString());
+      showSnackBar( e.toString());
     }
   }
 }
